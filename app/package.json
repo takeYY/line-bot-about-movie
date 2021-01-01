@@ -1,0 +1,27 @@
+{
+  "name": "line-bot-about-movie",
+  "version": "1.0.0",
+  "description": "周辺の映画館やおすすめの映画を教えてくれるLINE bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takeYY/line-bot-about-movie.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/takeYY/line-bot-about-movie/issues"
+  },
+  "homepage": "https://github.com/takeYY/line-bot-about-movie#readme",
+  "dependencies": {
+    "@line/bot-sdk": "^6.8.4",
+    "express": "^4.17.1",
+    "python-shell": "^2.0.1",
+    "sync-request": "^6.1.0"
+  }
+}

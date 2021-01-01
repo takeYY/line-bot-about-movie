@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    build: .
+    command: bash -c 'npm start'
+    image: line_bot_about_movie
+    volumes:
+      - ./app:/app
+    ports:
+      - "8080:8080"
+    tty: true
