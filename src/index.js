@@ -118,7 +118,7 @@ function searchMovies(event, obj) {
       movies = movies.slice(0,3);
     }
     // メッセージを構築
-    const layout = require('./layout_template.js');
+    var layout = require('./layout_template.js');
     var eachMovieLayoutTemplate = layout.movie();
     var moviesLayout = []
     movies.forEach(function (movie) {
@@ -174,7 +174,7 @@ function searchTheaters(event, obj) {
   }
   else {
     // メッセージを構築
-    const layout = require('./layout_template.js');
+    var layout = require('./layout_template.js');
     var eachTheaterLayoutTemplate = layout.theater();
     var theatersLayout = []
     theaters.forEach(function (theater) {
@@ -212,33 +212,10 @@ function handleEvent(event) {
         } else if (Text === "#movie" || Text === "映画") {
           //ユーザがBotに映画と送った場合,以下が実行される
           var liffUrl = "https://liff.line.me/1654406577-Dv0PZqRO";
-          const templateMovieMassage = {
-            type: 'template',
-            altText: '映画の検索方法を指定',
-            template: {
-              type: 'buttons',
-              title: '映画の検索設定',
-              text: '以下を選んで下さい。',
-              actions: [{
-                label: '詳しく指定',
-                type: 'uri',
-                uri: liffUrl
-              },
-              {
-                label: 'おすすめを検索',
-                type: 'postback',
-                data: JSON.stringify({
-                  'type': "movie"
-                }),
-                displayText: 'おすすめの映画を検索！'
-              }
-              ],
-            },
-          };
+          var layout = require('./layout_template.js');
+          const templateMovieMessage = layout.movie_message(liffUrl);
           // 返信
-          return client.replyMessage(event.replyToken, templateMovieMassage);
-
-          //response = "映画情報を表示予定です。\n（現在開発中）\nお楽しみに！";
+          return client.replyMessage(event.replyToken, templateMovieMessage);
         } else if (Text === "#開発者") {
           const movies = ["ウォーリー", "インサイド・ヘッド", "インターステラー", "マトリックス", "鈴木先生", "クラウドアトラス"];
           var random_movie = movies[Math.floor(Math.random() * movies.length)];
@@ -262,33 +239,10 @@ function handleEvent(event) {
         //ユーザがBotに位置情報を送った場合,以下が実行される
         //var liffUrl = util.format('https://liff.line.me/1654383535-Ww5vMA9l/?lat=%s&lon=%s', event.message.latitude, event.message.longitude);
         var liffUrl = `https://liff.line.me/1654383535-Ww5vMA9l/?lat=${event.message.latitude}&lon=${event.message.longitude}`;
-        const templateMassage = {
-          type: 'template',
-          altText: '検索方法を指定',
-          template: {
-            type: 'buttons',
-            title: '探索範囲の設定',
-            text: '以下を選んで下さい。',
-            actions: [{
-              label: '探索範囲を指定',
-              type: 'uri',
-              uri: liffUrl
-            },
-            {
-              label: '周囲3kmの映画館を検索',
-              type: 'postback',
-              data: JSON.stringify({
-                'type': "theater",
-                'lat': event.message.latitude,
-                'lon': event.message.longitude
-              }),
-              displayText: '周囲3kmの映画館を検索！'
-            }
-            ],
-          },
-        };
+        var layout = require('./layout_template.js')
+        const templateTheaterMessage = layout.theater_message(liffUrl, event.message.latitude, event.message.longitude);
         // 返信
-        return client.replyMessage(event.replyToken, templateMassage);
+        return client.replyMessage(event.replyToken, templateTheaterMessage);
       default:
         return Promise.resolve(null);
     }

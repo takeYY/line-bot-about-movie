@@ -152,3 +152,59 @@ exports.theater = function () {
   }
   return eachTheaterLayoutTemplate;
 };
+
+exports.theater_message = function (liffUrl, latitude, longitude) {
+  const templateTheaterMessage = {
+    type: 'template',
+    altText: '検索方法を指定',
+    template: {
+      type: 'buttons',
+      title: '探索範囲の設定',
+      text: '以下を選んで下さい。',
+      actions: [{
+        label: '探索範囲を指定',
+        type: 'uri',
+        uri: liffUrl
+      },
+      {
+        label: '周囲3kmの映画館を検索',
+        type: 'postback',
+        data: JSON.stringify({
+          'type': "theater",
+          'lat': latitude,
+          'lon': longitude
+        }),
+        displayText: '周囲3kmの映画館を検索！'
+      }
+      ],
+    },
+  };
+  return templateTheaterMessage;
+};
+
+exports.movie_message = function (liffUrl) {
+  const templateMovieMessage = {
+    type: 'template',
+    altText: '映画の検索方法を指定',
+    template: {
+      type: 'buttons',
+      title: '映画の検索設定',
+      text: '以下を選んで下さい。',
+      actions: [{
+        label: '詳しく指定',
+        type: 'uri',
+        uri: liffUrl
+      },
+      {
+        label: 'おすすめを検索',
+        type: 'postback',
+        data: JSON.stringify({
+          'type': "movie"
+        }),
+        displayText: 'おすすめの映画を検索！'
+      }
+      ],
+    },
+  };
+  return templateMovieMessage;
+};
