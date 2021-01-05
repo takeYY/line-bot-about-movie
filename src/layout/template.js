@@ -1,4 +1,20 @@
-exports.movie = function(){
+const movieResult = require('./movie/result');
+const movieMessage = require('./movie/message');
+const theaterResult = require('./theater/result');
+const theaterMessage = require('./theater/message');
+
+exports.movie_result = movieResult.template;
+exports.movie_message = function (liffUrl) {
+  return movieMessage.template(liffUrl);
+};
+exports.theater_result = theaterResult.template;
+exports.theater_message = function (liffUrl, latitude, longitude) {
+  return theaterMessage.template(liffUrl, latitude, longitude);
+};
+
+
+/*
+exports.movie_result = function () {
   var eachMovieLayoutTemplate = {
     "type": "bubble",
     "hero": {
@@ -75,19 +91,19 @@ exports.movie = function(){
   }
   return eachMovieLayoutTemplate;
 };
+*/
 
-exports.theater = function () {
+/*
+exports.theater_result = function () {
   var eachTheaterLayoutTemplate = {
     "type": "bubble",
-    /*
-    "hero": {
-      "type": "image",
-      "url": "https://linecorp.com",
-      "size": "full",
-      "aspectRatio": "2:1",
-      "aspectMode": "cover"
-    },
-    //  */
+    //"hero": {
+    //  "type": "image",
+    //  "url": "https://linecorp.com",
+    //  "size": "full",
+    //  "aspectRatio": "2:1",
+    //  "aspectMode": "cover"
+    //},
     "body": {
       "type": "box",
       "layout": "vertical",
@@ -152,7 +168,9 @@ exports.theater = function () {
   }
   return eachTheaterLayoutTemplate;
 };
+*/
 
+/*
 exports.theater_message = function (liffUrl, latitude, longitude) {
   const templateTheaterMessage = {
     type: 'template',
@@ -181,7 +199,9 @@ exports.theater_message = function (liffUrl, latitude, longitude) {
   };
   return templateTheaterMessage;
 };
+*/
 
+/*
 exports.movie_message = function (liffUrl) {
   const templateMovieMessage = {
     type: 'template',
@@ -208,3 +228,4 @@ exports.movie_message = function (liffUrl) {
   };
   return templateMovieMessage;
 };
+*/
