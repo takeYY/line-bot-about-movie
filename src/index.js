@@ -28,7 +28,6 @@ app.post('/callback', line.middleware(config), (req, res) => {
 });
 
 function searchConditions(event) {
-  console.log("searchCondition開始！！！！！");
   var searchQuery;
   try {
     searchQuery = JSON.parse(event.message.text)
@@ -54,25 +53,18 @@ function searchConditions(event) {
     }
     searchTheaters(event, obj);
   } else if (event_type === "movie") {
-    console.log("searchConditionsのmovie開始！！！！！");
-
     var language = "ja-JP";
     var sort_by = "vote_average.desc";
     var vote_count = "1000";
-    //console.log(searchQuery);
     var release_date = searchQuery.release_date;
     if (release_date === "最近") {
       release_date = "2011"
     } else {
       release_date = searchQuery.release_date.slice(0, 4);
     }
-    //console.log("release_date: " + release_date);
     var date_gte = release_date + "-01-01";
     var date_gte_num = Number(release_date) + 9;
     var date_lte = date_gte_num + "-12-31";
-    console.log("=================================");
-    console.log(util.format("date_gte:%s, date_lte:%s",date_gte, date_lte));
-    console.log("=================================");
     var overview = searchQuery.overview;
 
     var url = util.format("https://api.themoviedb.org/3/discover/movie?api_key=%s&language=%s&sort_by=%s&include_adult=false&page=1&vote_count.gte=%s&release_date.gte=%s&release_date.lte=%s", keys.tmdb_api, language, sort_by, vote_count, date_gte, date_lte);
@@ -80,7 +72,6 @@ function searchConditions(event) {
       url: url,
       overview: overview,
     }
-    console.log("searchConditionsのobj定義完了！！！！！！！！");
     searchMovies(event, obj);
   }
 }
@@ -125,85 +116,10 @@ function searchMovies(event, obj) {
       movies = movies.slice(0,3);
     }
     // メッセージを構築
-    var eachMovieLayoutTemplate = {
-      "type": "bubble",
-      "hero": {
-        "type": "image",
-        "url": "https://image.tmdb.org/t/p/w200/5NyJbE7JVfDJtP7c4CQzxgCLHFY.jpg",
-        "size": "full",
-        "aspectRatio": "2:3",
-        "aspectMode": "cover"
-      },
-      "body": {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "text",
-            "text": "title",
-            "weight": "bold",
-            "size": "xl"
-          },
-          {
-            "type": "box",
-            "layout": "vertical",
-            "margin": "lg",
-            "spacing": "sm",
-            "contents": [
-              {
-                "type": "box",
-                "layout": "baseline",
-                "spacing": "sm",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "概要",
-                    "color": "#aaaaaa",
-                    "size": "sm",
-                    "flex": 1
-                  },
-                  {
-                    "type": "text",
-                    "text": "概要の詳細",
-                    "wrap": true,
-                    "color": "#666666",
-                    "size": "md",
-                    "flex": 5
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "footer": {
-        "type": "box",
-        "layout": "vertical",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "button",
-            "style": "link",
-            "height": "sm",
-            "action": {
-              "type": "uri",
-              "label": "TMDb",
-              "uri": "https://www.themoviedb.org/?language=ja"
-            }
-          },
-          {
-            "type": "spacer",
-            "size": "sm"
-          }
-        ],
-        "flex": 0
-      }
-    }
+    const layout = require('./layout_template.js');
+    var eachMovieLayoutTemplate = layout.movie();
     var moviesLayout = []
     movies.forEach(function (movie) {
-      console.log("================================================");
-      console.log(movie);
-      console.log("================================================");
       var eachMovieLayout = JSON.parse(JSON.stringify(eachMovieLayoutTemplate));
       if (movie.poster_path != undefined) {
         eachMovieLayout.body.contents[0].text = movie.title;
@@ -222,28 +138,18 @@ function searchMovies(event, obj) {
         }
         eachMovieLayout.body.contents[1].contents[0].contents[1].text = overview_text;
         eachMovieLayout.hero.url = "https://image.tmdb.org/t/p/w200" + movie.poster_path;
-        //eachMovieLayout.footer.contents[0].action.uri = util.format('https://www.google.com/maps?q=%s,%s', movie.Geometry.Coordinates.split(',')[1], movie.Geometry.Coordinates.split(',')[0])
         moviesLayout.push(eachMovieLayout)
       }
     });
-    console.log("=======================================================");
-    console.log("carouselの前");
-    console.log("=======================================================");
     var carousel = {
       "type": "carousel",
       "contents": moviesLayout
     }
-    console.log("=======================================================");
-    console.log("movie_echoの前");
-    console.log("=======================================================");
     const movie_echo = {
       'type': 'flex',
       'altText': util.format('お探しの映画は%i件あります。', movies.length),
       'contents': carousel
     }
-    console.log("=======================================================");
-    console.log("returnの前");
-    console.log("=======================================================");
     return client.replyMessage(event.replyToken, movie_echo);
   }
 }
@@ -264,89 +170,15 @@ function searchTheaters(event, obj) {
   }
   else {
     // メッセージを構築
-    var eachTheaterLayoutTemplate = {
-      "type": "bubble",
-      /*
-      "hero": {
-        "type": "image",
-        "url": "https://linecorp.com",
-        "size": "full",
-        "aspectRatio": "2:1",
-        "aspectMode": "cover"
-      },
-      //  */
-      "body": {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [{
-          "type": "text",
-          "text": "Name",
-          "weight": "bold",
-          "size": "md"
-        },
-        {
-          "type": "box",
-          "layout": "vertical",
-          "margin": "lg",
-          "spacing": "sm",
-          "contents": [{
-            "type": "box",
-            "layout": "baseline",
-            "spacing": "sm",
-            "contents": [{
-              "type": "text",
-              "text": "住所",
-              "color": "#aaaaaa",
-              "size": "sm",
-              "flex": 1
-            },
-            {
-              "type": "text",
-              "text": "Address",
-              "wrap": true,
-              "color": "#666666",
-              "size": "sm",
-              "flex": 3
-            }
-            ]
-          }
-          ]
-        }
-        ]
-      },
-      "footer": {
-        "type": "box",
-        "layout": "vertical",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "button",
-            "style": "link",
-            "height": "sm",
-            "action": {
-              "type": "uri",
-              "label": "経路",
-              "uri": "https://linecorp.com"
-            }
-          },
-          {
-            "type": "spacer",
-            "size": "sm"
-          }
-        ],
-        "flex": 0
-      }
-    }
+    const layout = require('./layout_template.js');
+    var eachTheaterLayoutTemplate = layout.theater();
     var theatersLayout = []
     theaters.forEach(function (theater) {
       var eachTheaterLayout = JSON.parse(JSON.stringify(eachTheaterLayoutTemplate));
-      //if (theater.Property.LeadImage != undefined) {
       eachTheaterLayout.body.contents[0].text = theater.Name;
       eachTheaterLayout.body.contents[1].contents[0].contents[1].text = theater.Property.Address;
-      //eachTheaterLayout.hero.url = theater.Property.LeadImage.replace('http://', 'https://')
       eachTheaterLayout.footer.contents[0].action.uri = util.format('https://www.google.com/maps?q=%s,%s', theater.Geometry.Coordinates.split(',')[1], theater.Geometry.Coordinates.split(',')[0])
       theatersLayout.push(eachTheaterLayout)
-      //}
     });
     var carousel = {
       "type": "carousel",
@@ -397,7 +229,7 @@ function handleEvent(event) {
               }
               ],
             },
-          }
+          };
           // 返信
           return client.replyMessage(event.replyToken, templateMovieMassage);
 
@@ -448,7 +280,7 @@ function handleEvent(event) {
             }
             ],
           },
-        }
+        };
         // 返信
         return client.replyMessage(event.replyToken, templateMassage);
       default:
@@ -462,7 +294,7 @@ function handleEvent(event) {
       var obj = {
         url: url,
         dist: 3
-      }
+      };
       searchTheaters(event, obj);
     } else if (latlon.type === "movie") {
       //おすすめの映画を検索！
@@ -473,11 +305,8 @@ function handleEvent(event) {
       var url = util.format("https://api.themoviedb.org/3/discover/movie?api_key=%s&language=%s&sort_by=%s&include_adult=false&page=1&vote_count.gte=%s", keys.tmdb_api, language, sort_by, vote_count);
       var obj = {
         url: url,
-        overview:"する"
-      }
-      console.log("========================================");
-      console.log("postback_url: "+ obj.url);
-      console.log("========================================");
+        overview: "する"
+      };
       searchMovies(event, obj);
     }
   } else {
