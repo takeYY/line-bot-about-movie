@@ -5,7 +5,7 @@ services:
     command: bash -c 'npm start'
     image: line_bot_about_movie
     volumes:
-      - ./app:/app
+      - .:/usr/src/app
     ports:
       - "8080:8080"
     tty: true

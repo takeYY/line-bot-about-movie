@@ -14,7 +14,7 @@ const { url } = require('inspector');
 var keys = {
   tmdb_api: process.env.TMDB_API,
   yahoo_api: process.env.YAHOO_API,
-};
+}
 
 // LINE Botからのアクセスの一次処理。
 app.post('/callback', line.middleware(config), (req, res) => {
