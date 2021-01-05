@@ -9,7 +9,6 @@ const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
 };
 const client = new line.Client(config);
-//const { url } = require('inspector');
 
 const keys = {
   tmdb_api: process.env.TMDB_API,
