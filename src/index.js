@@ -3,27 +3,20 @@ const express = require('express');
 const app = express();
 const line = require('@line/bot-sdk');
 const layout = require('./layout/template');
+const configuration = require('./config/config');
+const eventHandler = require('./event/handler');
 // Bot用情報
-const config = {
-  channelSecret: process.env.CHANNEL_SECRET,
-  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-};
+const config = configuration.conf.config;
+
 const client = new line.Client(config);
 
-const keys = {
-  tmdb_api: process.env.TMDB_API,
-  yahoo_api: process.env.YAHOO_API,
-};
-
-const yahooRequestURI = `https://map.yahooapis.jp/search/local/V1/localSearch?appid=${keys.yahoo_api}&gc=0305001&sort=dist&output=json`;
-const tmdbRequestURI = `https://api.themoviedb.org/3/discover/movie?api_key=${keys.tmdb_api}&include_adult=false&page=1`;
-const movieLiffURI = 'https://liff.line.me/1654406577-Dv0PZqRO';
-const theaterLiffURI = 'https://liff.line.me/1654383535-Ww5vMA9l/';
+// requestURI情報
+const URI = configuration.conf.URIs;
 
 // LINE Botからのアクセスの一次処理。
 app.post('/callback', line.middleware(config), (req, res) => {
   Promise
-    .all(req.body.events.map(handleEvent))
+    .all(req.body.events.map(eventHandler.handler))
     .then((result) => res.json(result))
     .catch((err) => {
       console.error(err);
@@ -31,6 +24,7 @@ app.post('/callback', line.middleware(config), (req, res) => {
     });
 });
 
+/*
 function searchConditions(event) {
   var searchQuery;
   try {
@@ -44,34 +38,34 @@ function searchConditions(event) {
     // 返信
     return client.replyMessage(event.replyToken, echo);
   }
-  var event_type = searchQuery.type;
-  if (event_type === "theater") {
+  var eventType = searchQuery.type;
+  if (eventType === "theater") {
     // ユーザーからBotにテキスト位置情報が送られた場合のみ以下が実行される
     var lat = searchQuery.lat;
     var lon = searchQuery.lon;
     var dist = searchQuery.dist.slice(0, -2);
-    var url = `${yahooRequestURI}&lat=${lat}&lon=${lon}&dist=${dist}`;
+    var url = `${URI.yahoo}&lat=${lat}&lon=${lon}&dist=${dist}`;
     var obj = {
       url: url,
       dist: dist
     }
     searchTheaters(event, obj);
-  } else if (event_type === "movie") {
+  } else if (eventType === "movie") {
     var language = "ja-JP";
-    var sort_by = "vote_average.desc";
-    var vote_count = "1000";
-    var release_date = searchQuery.release_date;
-    if (release_date === "最近") {
-      release_date = "2011"
+    var sortBy = "vote_average.desc";
+    var voteCount = "1000";
+    var releaseDate = searchQuery.release_date;
+    if (releaseDate === "最近") {
+      releaseDate = "2011"
     } else {
-      release_date = searchQuery.release_date.slice(0, 4);
+      releaseDate = searchQuery.release_date.slice(0, 4);
     }
-    var date_gte = release_date + "-01-01";
-    var date_gte_num = Number(release_date) + 9;
+    var date_gte = releaseDate + "-01-01";
+    var date_gte_num = Number(releaseDate) + 9;
     var date_lte = date_gte_num + "-12-31";
     var overview = searchQuery.overview;
 
-    var url = `${tmdbRequestURI}&language=${language}&sort_by=${sort_by}&vote_count.gte=${vote_count}&release_date.gte=${date_gte}&release_date.lte=${date_lte}`;
+    var url = `${URI.tmdb}&language=${language}&sort_by=${sortBy}&vote_count.gte=${voteCount}&release_date.gte=${date_gte}&release_date.lte=${date_lte}`;
     var obj = {
       url: url,
       overview: overview,
@@ -79,12 +73,16 @@ function searchConditions(event) {
     searchMovies(event, obj);
   }
 }
+*/
 
+/*
 function setNextPageURL(url,page) {
   var new_url = url + "&page=" + page;
   return new_url;
 }
+*/
 
+/*
 function searchMovies(event, obj) {
   var url = obj.url;
   var overview = obj.overview;
@@ -120,7 +118,7 @@ function searchMovies(event, obj) {
       movies = movies.slice(0,3);
     }
     // メッセージを構築
-    var eachMovieLayoutTemplate = layout.movie_result;
+    var eachMovieLayoutTemplate = layout.movieResult;
     var moviesLayout = []
     movies.forEach(function (movie) {
       var eachMovieLayout = JSON.parse(JSON.stringify(eachMovieLayoutTemplate));
@@ -156,7 +154,9 @@ function searchMovies(event, obj) {
     return client.replyMessage(event.replyToken, movie_echo);
   }
 }
+*/
 
+/*
 function searchTheaters(event, obj) {
   var url = obj.url;
   var distance = obj.dist;
@@ -173,7 +173,7 @@ function searchTheaters(event, obj) {
   }
   else {
     // メッセージを構築
-    var eachTheaterLayoutTemplate = layout.theater_result;
+    var eachTheaterLayoutTemplate = layout.theaterResult;
     var theatersLayout = []
     theaters.forEach(function (theater) {
       var eachTheaterLayout = JSON.parse(JSON.stringify(eachTheaterLayoutTemplate));
@@ -194,9 +194,11 @@ function searchTheaters(event, obj) {
     return client.replyMessage(event.replyToken, location_echo);
   }
 }
+*/
 
+/*
 // イベントに対する返答を記述する部分
-function handleEvent(event) {
+function eventHandler(event) {
   if (event.type === 'message') {
     switch (event.message.type) {
       case 'text':
@@ -207,7 +209,7 @@ function handleEvent(event) {
           response = "#movie\n上記入力で映画情報を表示します。\n\n位置情報を送ることで周辺の映画館をリスト表示します。\n\n#???\n隠しコマンドがあります。";
         } else if (Text === "#movie" || Text === "映画") {
           //ユーザがBotに映画と送った場合,以下が実行される
-          const templateMovieMessage = layout.movie_message(movieLiffURI);
+          const templateMovieMessage = layout.movieMessage(URI.movieLIFF);
           // 返信
           return client.replyMessage(event.replyToken, templateMovieMessage);
         } else if (Text === "#開発者") {
@@ -231,8 +233,8 @@ function handleEvent(event) {
         return client.replyMessage(event.replyToken, image_echo);
       case 'location':
         //ユーザがBotに位置情報を送った場合,以下が実行される
-        var liffUrl = `${theaterLiffURI}?lat=${event.message.latitude}&lon=${event.message.longitude}`;
-        const templateTheaterMessage = layout.theater_message(liffUrl, event.message.latitude, event.message.longitude);
+        var liffUrl = `${URI.theaterLIFF}?lat=${event.message.latitude}&lon=${event.message.longitude}`;
+        const templateTheaterMessage = layout.theaterMessage(liffUrl, event.message.latitude, event.message.longitude);
         // 返信
         return client.replyMessage(event.replyToken, templateTheaterMessage);
       default:
@@ -242,7 +244,7 @@ function handleEvent(event) {
     var latlon = JSON.parse(event.postback.data);
     if (latlon.type === "theater") {
       //周囲3kmの映画館を検索！
-      var url = `${yahooRequestURI}&lat=${latlon.lat}&lon=${latlon.lon}&dist=3`;
+      var url = `${URI.yahoo}&lat=${latlon.lat}&lon=${latlon.lon}&dist=3`;
       var obj = {
         url: url,
         dist: 3
@@ -251,10 +253,10 @@ function handleEvent(event) {
     } else if (latlon.type === "movie") {
       //おすすめの映画を検索！
       var language = "ja-JP";
-      var sort_by = "vote_average.desc";
-      var vote_count = "1000";
+      var sortBy = "vote_average.desc";
+      var voteCount = "1000";
 
-      var url = `${tmdbRequestURI}&language=${language}&sort_by=${sort_by}&vote_count.gte=${vote_count}`;
+      var url = `${URI.tmdb}&language=${language}&sort_by=${sortBy}&vote_count.gte=${voteCount}`;
       var obj = {
         url: url,
         overview: "する"
@@ -269,6 +271,8 @@ function handleEvent(event) {
     }
   }
 }
+*/
+
 // Webアプリケーションを開始
 const port = process.env.PORT || 8080;
 //publicフォルダを利用

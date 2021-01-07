@@ -1,13 +1,13 @@
-const movieResult = require('./movie/result');
-const movieMessage = require('./movie/message');
-const theaterResult = require('./theater/result');
-const theaterMessage = require('./theater/message');
+const movieResultTemp = require('./movie/result');
+const movieMessageTemp = require('./movie/message');
+const theaterResultTemp = require('./theater/result');
+const theaterMessageTemp = require('./theater/message');
 
-exports.movie_result = movieResult.template;
-exports.movie_message = function (liffUrl) {
-  return movieMessage.template(liffUrl);
+exports.movieResult = movieResultTemp.template;
+exports.movieMessage = function (liffUrl) {
+  return movieMessageTemp.template(liffUrl);
 };
-exports.theater_result = theaterResult.template;
-exports.theater_message = function (liffUrl, latitude, longitude) {
-  return theaterMessage.template(liffUrl, latitude, longitude);
+exports.theaterResult = theaterResultTemp.template;
+exports.theaterMessage = function (liffUrl, latitude, longitude) {
+  return theaterMessageTemp.template(liffUrl, latitude, longitude);
 };
