@@ -4,7 +4,7 @@ const config = configuration.config;
 const client = new line.Client(config);
 const layout = require('../layout/template');
 
-exports.searchTheaters = function (event, obj) {
+exports.search = function (event, obj) {
   var url = obj.url;
   var distance = obj.dist;
   var request = require('sync-request');
@@ -30,8 +30,8 @@ exports.searchTheaters = function (event, obj) {
       theatersLayout.push(eachTheaterLayout)
     });
     var carousel = {
-      "type": "carousel",
-      "contents": theatersLayout
+      'type': 'carousel',
+      'contents': theatersLayout
     }
     const location_echo = {
       'type': 'flex',
