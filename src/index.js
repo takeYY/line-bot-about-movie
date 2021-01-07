@@ -3,15 +3,15 @@ const express = require('express');
 const app = express();
 const line = require('@line/bot-sdk');
 const layout = require('./layout/template');
-const configuration = require('./config/config');
+const configuration = require('./config/router');
 const eventHandler = require('./event/handler');
 // Bot用情報
-const config = configuration.conf.config;
+const config = configuration.config;
 
-const client = new line.Client(config);
+// const client = new line.Client(config);
 
 // requestURI情報
-const URI = configuration.conf.URIs;
+// const URI = configuration.conf.URIs;
 
 // LINE Botからのアクセスの一次処理。
 app.post('/callback', line.middleware(config), (req, res) => {

@@ -1,11 +1,11 @@
-const configuration = require('../config/config');
+const configuration = require('../config/router');
 const line = require('@line/bot-sdk');
-const config = configuration.conf.config;
+const config = configuration.config;
 const client = new line.Client(config);
 const searchMovies = require('./movies');
 const searchTheaters = require('./theaters');
 
-const URI = configuration.conf.URIs;
+const URI = configuration.URIs;
 
 exports.searchConditions = function (event) {
   var searchQuery;

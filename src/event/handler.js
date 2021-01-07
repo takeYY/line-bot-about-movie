@@ -1,13 +1,13 @@
-const configuration = require('../config/config');
+const configuration = require('../config/router');
 const line = require('@line/bot-sdk');
-const config = configuration.conf.config;
+const config = configuration.config;
 const client = new line.Client(config);
 const layout = require('../layout/template');
 const searchConditions = require('../search/conditions');
 const searchMovies = require('../search/movies');
 const searchTheaters = require('../search/theaters');
 
-const URI = configuration.conf.URIs;
+const URI = configuration.URIs;
 
 // イベントに対する返答を記述する部分
 exports.handler = function (event) {
