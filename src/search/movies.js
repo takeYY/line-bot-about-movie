@@ -71,12 +71,12 @@ exports.search = function (event, obj) {
     });
     var carousel = {
       'type': 'carousel',
-      'contents': moviesLayout
+      'contents': moviesLayout,
     }
     const movie_echo = {
       'type': 'flex',
       'altText': `お探しの映画は${movies.length}件あります。`,
-      'contents': carousel
+      'contents': carousel,
     }
     return client.replyMessage(event.replyToken, movie_echo);
   }

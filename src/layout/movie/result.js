@@ -1,47 +1,47 @@
 exports.template = {
-  "type": "bubble",
-  "hero": {
-    "type": "image",
-    "url": "https://image.tmdb.org/t/p/w200/5NyJbE7JVfDJtP7c4CQzxgCLHFY.jpg",
-    "size": "full",
-    "aspectRatio": "2:3",
-    "aspectMode": "cover"
+  'type': 'bubble',
+  'hero': {
+    'type': 'image',
+    'url': 'https://image.tmdb.org/t/p/w200/5NyJbE7JVfDJtP7c4CQzxgCLHFY.jpg',
+    'size': 'full',
+    'aspectRatio': '2:3',
+    'aspectMode': 'cover',
   },
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
+  'body': {
+    'type': 'box',
+    'layout': 'vertical',
+    'contents': [
       {
-        "type": "text",
-        "text": "title",
-        "weight": "bold",
-        "size": "xl"
+        'type': 'text',
+        'text': 'title',
+        'weight': 'bold',
+        'size': 'xl',
       },
       {
-        "type": "box",
-        "layout": "vertical",
-        "margin": "lg",
-        "spacing": "sm",
-        "contents": [
+        'type': 'box',
+        'layout': 'vertical',
+        'margin': 'lg',
+        'spacing': 'sm',
+        'contents': [
           {
-            "type": "box",
-            "layout": "baseline",
-            "spacing": "sm",
-            "contents": [
+            'type': 'box',
+            'layout': 'baseline',
+            'spacing': 'sm',
+            'contents': [
               {
-                "type": "text",
-                "text": "概要",
-                "color": "#aaaaaa",
-                "size": "sm",
-                "flex": 1
+                'type': 'text',
+                'text': '概要',
+                'color': '#aaaaaa',
+                'size': 'sm',
+                'flex': 1,
               },
               {
-                "type": "text",
-                "text": "概要の詳細",
-                "wrap": true,
-                "color": "#666666",
-                "size": "md",
-                "flex": 5
+                'type': 'text',
+                'text': '概要の詳細',
+                'wrap': true,
+                'color': '#666666',
+                'size': 'md',
+                'flex': 5,
               }
             ]
           }
@@ -49,26 +49,26 @@ exports.template = {
       }
     ]
   },
-  "footer": {
-    "type": "box",
-    "layout": "vertical",
-    "spacing": "sm",
-    "contents": [
+  'footer': {
+    'type': 'box',
+    'layout': 'vertical',
+    'spacing': 'sm',
+    'contents': [
       {
-        "type": "button",
-        "style": "link",
-        "height": "sm",
-        "action": {
-          "type": "uri",
-          "label": "TMDb",
-          "uri": "https://www.themoviedb.org/?language=ja"
+        'type': 'button',
+        'style': 'link',
+        'height': 'sm',
+        'action': {
+          'type': 'uri',
+          'label': 'TMDb',
+          'uri': 'https://www.themoviedb.org/?language=ja',
         }
       },
       {
-        "type": "spacer",
-        "size": "sm"
+        'type': 'spacer',
+        'size': 'sm',
       }
     ],
-    "flex": 0
+    'flex': 0,
   }
 };

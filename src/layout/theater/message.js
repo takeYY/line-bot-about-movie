@@ -10,17 +10,17 @@ exports.template = function (liffUrl, latitude, longitude) {
         {
           label: '探索範囲を指定',
           type: 'uri',
-          uri: liffUrl
+          uri: liffUrl,
         },
         {
           label: '周囲3kmの映画館を検索',
           type: 'postback',
           data: JSON.stringify({
-            'type': "theater",
+            'type': 'theater',
             'lat': latitude,
-            'lon': longitude
+            'lon': longitude,
           }),
-          displayText: '周囲3kmの映画館を検索！'
+          displayText: '周囲3kmの映画館を検索！',
         }
       ],
     },

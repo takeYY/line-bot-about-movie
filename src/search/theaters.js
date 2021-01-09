@@ -14,7 +14,7 @@ exports.search = function (event, obj) {
   if (theaters === undefined) {
     const location_echo = {
       type: 'text',
-      text: `周辺${distance}kmに映画館はありません。`
+      text: `周辺${distance}kmに映画館はありません。`,
     }
     return client.replyMessage(event.replyToken, location_echo);
   }
@@ -31,12 +31,12 @@ exports.search = function (event, obj) {
     });
     var carousel = {
       'type': 'carousel',
-      'contents': theatersLayout
+      'contents': theatersLayout,
     }
     const location_echo = {
       'type': 'flex',
       'altText': `周辺${distance}kmに映画館は${theaters.length}件あります。`,
-      'contents': carousel
+      'contents': carousel,
     }
     return client.replyMessage(event.replyToken, location_echo);
   }

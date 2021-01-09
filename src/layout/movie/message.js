@@ -10,17 +10,17 @@ exports.template = function (liffUrl) {
         {
           label: '詳しく指定',
           type: 'uri',
-          uri: liffUrl
+          uri: liffUrl,
         },
         {
           label: 'おすすめを検索',
           type: 'postback',
           data: JSON.stringify(
             {
-              'type': "movie"
+              'type': 'movie',
             }
           ),
-          displayText: 'おすすめの映画を検索！'
+          displayText: 'おすすめの映画を検索！',
         }
       ],
     },
