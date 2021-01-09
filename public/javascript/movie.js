@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  var liff_id_movie = process.env.MOVIE_LIFF;
+  var liff_id_movie = $movie.data('liffID');
   console.log('映画LIFF_ID');
   console.log(liff_id_movie);
   initializeLiff(liff_id_movie)
