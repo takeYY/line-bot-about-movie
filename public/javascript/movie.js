@@ -1,14 +1,13 @@
 $(document).ready(function () {
-  var liff_id = 'testtest';
-  initializeLiff(liff_id)
+  var liff_id_movie = process.env.MOVIE_LIFF;
+  initializeLiff(liff_id_movie)
   $('#form').submit(function (event) {
     var values = {};
+    values.type = 'movie';
     $.each($('#form').serializeArray(), function (i, field) {
       values[field.name] = field.value;
     });
-    var params = new URLSearchParams(decodeURIComponent(window.location.search));
-    values.lat = params.get('lat');
-    values.lon = params.get('lon');
+    values.overview = $('#btn-group-overview > .btn.active').text().trim();
     liff.sendMessages([{
       'type': 'text',
       'text': JSON.stringify(values)
@@ -19,7 +18,7 @@ $(document).ready(function () {
     });
     event.preventDefault();
   });
-})
+});
 function initializeLiff(liffId) {
   liff
     .init({
@@ -31,4 +30,4 @@ function initializeLiff(liffId) {
     .catch((err) => {
       console.log('LIFF Initialization failed ', err)
     });
-}
+};

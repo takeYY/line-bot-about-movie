@@ -7,6 +7,15 @@ const eventHandler = require('./event/handler');
 // Bot用情報
 const config = configuration.config;
 
+app.set('view engine', 'pug');
+
+app.get('/theaters', function (req, res) {
+  res.render('theater', {})
+});
+app.get('/movies', function (req, res) {
+  res.render('movie', {})
+});
+
 // LINE Botからのアクセスの一次処理。
 app.post('/callback', line.middleware(config), (req, res) => {
   Promise
@@ -21,7 +30,7 @@ app.post('/callback', line.middleware(config), (req, res) => {
 // Webアプリケーションを開始
 const port = process.env.PORT || 8080;
 //publicフォルダを利用
-app.use(express.static('public'));
+//app.use(express.static('public'));
 app.listen(port, () => {
   console.log(`listening on ${port}`);
 });
