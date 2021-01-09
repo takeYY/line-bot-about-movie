@@ -1,5 +1,7 @@
 $(document).ready(function () {
   var liff_id_theater = process.env.THEATER_LIFF;
+  console.log('劇場LIFF_ID');
+  console.log(liff_id_theater);
   initializeLiff(liff_id_theater)
   $('#form').submit(function (event) {
     var values = {};

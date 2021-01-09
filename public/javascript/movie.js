@@ -1,5 +1,7 @@
 $(document).ready(function () {
   var liff_id_movie = process.env.MOVIE_LIFF;
+  console.log('映画LIFF_ID');
+  console.log(liff_id_movie);
   initializeLiff(liff_id_movie)
   $('#form').submit(function (event) {
     var values = {};
