@@ -17,12 +17,10 @@ html(lang='jp')
             integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6',
             crossorigin='anonymous')
     script(src='https://static.line-scdn.net/liff/edge/2.1/sdk.js')
-    script(src='./../public/javascript/movie.js', id='movie', data-liffID=liff_id)
-    //script.
+    script.
       $(document).ready(function () {
-        var liff_id_movie = "#{liff_id}";
-        console.log(liff_id_movie);
-        initializeLiff(liff_id_movie)
+        var temp = "#{liff_id}";
+        initializeLiff(temp)
         $('#form').submit(function (event) {
           var values = {};
           values.type = 'movie';

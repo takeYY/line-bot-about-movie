@@ -10,10 +10,19 @@ const config = configuration.config;
 app.set('view engine', 'pug');
 
 app.get('/theaters', function (req, res) {
-  res.render('theater', {})
+  res.render('theater', {
+    liff_id: process.env.THEATER_LIFF,
+  });
 });
 app.get('/movies', function (req, res) {
-  res.render('movie', {liff_id: process.env.MOVIE_LIFF})
+  res.render('movie', {
+    liff_id: process.env.MOVIE_LIFF,
+  });
+});
+app.get('/', function (req, res) {
+  res.render('index', {
+    title: '概要',
+  });
 });
 
 // LINE Botからのアクセスの一次処理。
@@ -29,8 +38,6 @@ app.post('/callback', line.middleware(config), (req, res) => {
 
 // Webアプリケーションを開始
 const port = process.env.PORT || 8080;
-//publicフォルダを利用
-//app.use(express.static('public'));
 app.listen(port, () => {
   console.log(`listening on ${port}`);
 });

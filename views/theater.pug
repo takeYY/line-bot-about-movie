@@ -17,7 +17,42 @@ html(lang='jp')
             integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6',
             crossorigin='anonymous')
     script(src='https://static.line-scdn.net/liff/edge/2.1/sdk.js')
-    script(src='../public/javascript/theater.js')
+    script.
+      $(document).ready(function () {
+        var temp = "#{liff_id}";
+        initializeLiff(temp)
+        $('#form').submit(function (event) {
+          var values = {};
+          values.type = 'theater';
+          $.each($('#form').serializeArray(), function (i, field) {
+            values[field.name] = field.value;
+          });
+          var params = new URLSearchParams(decodeURIComponent(window.location.search));
+          values.lat = params.get('lat');
+          values.lon = params.get('lon');
+          liff.sendMessages([{
+            'type': 'text',
+            'text': JSON.stringify(values)
+          }]).then(function () {
+            liff.closeWindow()
+          }).catch(function (error) {
+            window.alert('Failed to send message ' + error);
+          });
+          event.preventDefault();
+        });
+      })
+      function initializeLiff(liffId) {
+        liff
+          .init({
+            liffId: liffId
+          })
+          .then(() => {
+            console.log('LIFF Initialization succeed')
+          })
+          .catch((err) => {
+            console.log('LIFF Initialization failed ', err)
+          });
+      }
   body
     div.container
       form(id='form', class='form mt-3')
