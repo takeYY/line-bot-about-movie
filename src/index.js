@@ -13,7 +13,7 @@ app.get('/theaters', function (req, res) {
   res.render('theater', {})
 });
 app.get('/movies', function (req, res) {
-  res.render('movie', {})
+  res.render('movie', {liff_id: process.env.MOVIE_LIFF})
 });
 
 // LINE Botからのアクセスの一次処理。
