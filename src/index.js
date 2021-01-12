@@ -8,6 +8,7 @@ const eventHandler = require('./event/handler');
 const config = configuration.config;
 
 app.set('view engine', 'pug');
+app.use('/public', express.static('public'));
 
 app.get('/theaters', function (req, res) {
   res.render('theater', {
