@@ -7,6 +7,7 @@ html(lang='jp')
     meta(http-equiv='X-UA-Compatible', content='ie=edge')
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css',
             crossorigin='anonymous')
+    link(rel='stylesheet', href='public/stylesheets/application.css')
     script(src='https://code.jquery.com/jquery-3.4.1.slim.min.js',
             integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n',
             crossorigin='anonymous')
@@ -17,56 +18,30 @@ html(lang='jp')
             integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6',
             crossorigin='anonymous')
     script(src='https://static.line-scdn.net/liff/edge/2.1/sdk.js')
-    script.
-      $(document).ready(function () {
-        var temp = "#{liff_id}";
-        initializeLiff(temp)
-        $('#form').submit(function (event) {
-          var values = {};
-          values.type = 'movie';
-          $.each($('#form').serializeArray(), function (i, field) {
-            values[field.name] = field.value;
-          });
-          values.overview = $('#btn-group-overview > .btn.active').text().trim();
-          liff.sendMessages([{
-            'type': 'text',
-            'text': JSON.stringify(values)
-          }]).then(function () {
-            liff.closeWindow()
-          }).catch(function (error) {
-            window.alert('Failed to send message ' + error);
-          });
-          event.preventDefault();
-        });
-      })
-      function initializeLiff(liffId) {
-        liff
-          .init({
-            liffId: liffId
-          })
-          .then(() => {
-            console.log('LIFF Initialization succeed')
-          })
-          .catch((err) => {
-            console.log('LIFF Initialization failed ', err)
-          });
-      }
-  body
-    div.container
-      form(id='form', class='form mt-3')
-        div.form-group
-          label(for='select-release_date') 公開日指定
-          select(name='release_date', class='form-control', id='select-release_date')
-            - for (var x = 1900; x <= 2010; x+=10)
-              option #{x}年　〜　#{x+9}年
-            option 最近
-        div.form-group
-          span 概要の表示(ネタバレが含まれる可能性があります)
-          div(id='btn-group-overview', class='w-100 btn-group btn-group-toggle', role='group', data-toggle='buttons')
-            label(class='btn btn-outline-info')
-              input(type='radio', autocomplete='off', checked=true)
-              span しない
-            label(class='btn btn-outline-info')
-              input(type='radio', autocomplete='off', checked=false)
-              span する
-        input(type='submit', class='btn btn-lg btn-primary w-100', value='検索')
+    div(id='movie_temp', data-temp=liff_id)
+    script(type='text/javascript', src='public/javascripts/movie.js')
+  body.bg-line-color
+    .container.bg-line-color
+      .card.mx-auto
+        form(id='form', class='form mt-3 mb-3')
+          .card-body
+            .card-header.bg-success.text-white 映画の詳細条件を指定
+          .form-group
+            .card-body
+              label(for='select-release_date', class='outline-line-color') 公開日指定
+              select(name='release_date', class='form-control', id='select-release_date')
+                - for (var x = 1900; x <= 2010; x+=10)
+                  option #{x}年　〜　#{x+9}年
+                option 最近
+          .form-group
+            .card-body
+              label.outline-line-color 概要の表示<br>(ネタバレが含まれる可能性あり)
+              div(id='btn-group-overview', class='w-100 btn-group btn-group-toggle', role='group', data-toggle='buttons')
+                label(class='btn btn-outline-success')
+                  input(type='radio', autocomplete='off', checked=true)
+                  span しない
+                label(class='btn btn-outline-success')
+                  input(type='radio', autocomplete='off', checked=false)
+                  span する
+          .text-center
+            input(type='submit', class='btn btn-lg btn-outline-success mb-3', value='検索')
