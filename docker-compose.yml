@@ -4,6 +4,7 @@ services:
     build: .
     command: bash -c 'npm start'
     image: line_bot_about_movie
+    env_file: ./app.env
     volumes:
       - .:/usr/src/app
     ports:
