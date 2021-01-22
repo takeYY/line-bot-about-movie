@@ -5,13 +5,30 @@ const client = new line.Client(config);
 const layout = require('../layout/template');
 const request = require('sync-request');
 
-function setNextPageURL(url, page) {
+function setPageURL(url, page) {
   return url + '&page=' + page;
+};
+
+function getMovies(url) {
+  return requestURL(url).results;
+};
+
+function get3Movies(list) {
+  var movies = [];
+  for (let i = 0; i < 3; i++) {
+    var random_content = getRandomInt(list.length);
+    movies.push(list[random_content]);
+  }
+  return movies;
 };
 
 function requestURL(url) {
   var response = request('GET', url);
   return JSON.parse(response.getBody('utf8'));
+};
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
 };
 
 exports.search = function (event, obj) {
@@ -20,18 +37,22 @@ exports.search = function (event, obj) {
   var total_pages = result.total_pages;
   var movies = [];
   var movies_list = [];
-  if (2 <= total_pages) {
-    for (let page = 2; page < total_pages/2; page++){
-      var next_url = setNextPageURL(url, page);
-      var result_page = requestURL(next_url);
-      movies_list = movies_list.concat(result_page.results);
+  if (4 <= total_pages) {
+    for (let i = 0; i < 3; i++) {
+      var random_page = getRandomInt(total_pages - 1) + 1;
+      var random_url = setPageURL(url, random_page);
+      movies_list = movies_list.concat(getMovies(random_url));
     }
-    for (let i = 0; i < 3; i++){
-      var random_content = Math.floor(Math.random() * movies_list.length);
-      movies.push(movies_list[random_content]);
+    movies = get3Movies(movies_list);
+  } else if (2 <= total_pages && total_pages < 4) {
+    for (let i = 0; i < total_pages; i++){
+      var movie_url = setPageURL(url, i);
+      movies_list = movies_list.concat(getMovies(movie_url));
     }
+    movies = get3Movies(movies_list);
   } else {
-    movies = result.results;
+    movies_list = result.results;
+    movies = get3Movies(movies_list);
   }
   if (movies === undefined || movies[0] === undefined) {
     const movie_echo = {
