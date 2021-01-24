@@ -19,6 +19,45 @@ exports.template = {
       },
       {
         'type': 'box',
+        'layout': 'baseline',
+        'margin': 'md',
+        'contents': [
+          {
+            'type': 'icon',
+            'url': 'star_url',
+            'size': 'md'
+          },
+          {
+            'type': 'icon',
+            'url': 'star_url',
+            'size': 'md'
+          },
+          {
+            'type': 'icon',
+            'url': 'star_url',
+            'size': 'md'
+          },
+          {
+            'type': 'icon',
+            'url': 'star_url',
+            'size': 'md'
+          },
+          {
+            'type': 'icon',
+            'url': 'star_url',
+            'size': 'md'
+          },
+          {
+            'type': 'text',
+            'text': '4.36（144件）',
+            'size': 'md',
+            'color': '#999999',
+            'margin': 'xxl',
+          }
+        ]
+      },
+      {
+        'type': 'box',
         'layout': 'vertical',
         'margin': 'lg',
         'spacing': 'sm',
@@ -65,10 +104,10 @@ exports.template = {
         }
       },
       {
-        "type": "text",
-        "text": "data by TMDb",
-        "size": "xs",
-        "align": "end",
+        'type': 'text',
+        'text': 'data by TMDb',
+        'size': 'xs',
+        'align': 'end',
       },
       {
         'type': 'spacer',
