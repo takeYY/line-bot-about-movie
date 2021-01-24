@@ -17,20 +17,20 @@ exports.handler = function (event) {
 
         const Text = event.message.text;
         var response;
-        if (Text === '#help' || Text === 'ヘルプ') {
+        if (Text.includes('help') || Text.includes('ヘルプ')) {
 
-          // ユーザから「#help」か「ヘルプ」が送られた場合
-          response = '#movie\n上記入力で映画情報を表示します。\n\n位置情報を送ることで周辺の映画館をリスト表示します。\n\n#???\n隠しコマンドがあります。';
-        } else if (Text === '#movie' || Text === '映画') {
+          // ユーザから「help」か「ヘルプ」が含まれたメッセージを送られた場合
+          response = 'movie　映画\n上記入力で映画情報を表示します。\n\n位置情報を送ることで周辺の映画館をリスト表示します。\n\n#???\n隠しコマンドがあります。';
+        } else if (Text.includes('movie') || Text.includes('映画')) {
 
-          // ユーザから「#movie」か「映画」が送られた場合
+          // ユーザから「movie」か「映画」が含まれたメッセージを送られた場合
           const templateMovieMessage = layout.movieMessage(URI.movieLIFF);
           // 返信
           return client.replyMessage(event.replyToken, templateMovieMessage);
-        } else if (Text === '#開発者') {
+        } else if (Text === '開発者') {
 
           // ユーザから「#開発者」が送られた場合
-          const movies = ['ウォーリー', 'インサイド・ヘッド', 'インターステラー', 'マトリックス', '鈴木先生', 'クラウドアトラス'];
+          const movies = ['ウォーリー', 'インサイド・ヘッド', 'インターステラー', 'マトリックス', '鈴木先生', 'クラウドアトラス', 'ダンサー・イン・ザ・ダーク'];
           var random_movie = movies[Math.floor(Math.random() * movies.length)];
           response = `開発者のおすすめの映画は\n『${random_movie}』\nです。`;
         } else {
