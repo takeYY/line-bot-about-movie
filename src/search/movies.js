@@ -89,7 +89,7 @@ exports.search = function (event, obj) {
         eachMovieLayout.hero.url = 'https://image.tmdb.org/t/p/w200' + movie.poster_path;
         eachMovieLayout.footer.contents[0].action.uri = `https://www.themoviedb.org/movie/${movie.id}?language=ja-JP`;
         for (let i = 0; i < 5; i++) {
-          if (i < movie.vote_average/2) {
+          if (i+1 < movie.vote_average/2) {
             eachMovieLayout.body.contents[1].contents[i].url = 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png';
           } else {
             eachMovieLayout.body.contents[1].contents[i].url = 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png';
