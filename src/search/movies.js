@@ -87,6 +87,7 @@ exports.search = function (event, obj) {
         }
         eachMovieLayout.body.contents[1].contents[0].contents[1].text = overview_text;
         eachMovieLayout.hero.url = 'https://image.tmdb.org/t/p/w200' + movie.poster_path;
+        eachMovieLayout.footer.contents[0].action.uri = `https://www.themoviedb.org/movie/${movie.id}?language=ja-JP`;
         moviesLayout.push(eachMovieLayout)
       }
     });

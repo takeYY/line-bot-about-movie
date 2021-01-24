@@ -60,9 +60,15 @@ exports.template = {
         'height': 'sm',
         'action': {
           'type': 'uri',
-          'label': 'TMDb',
-          'uri': 'https://www.themoviedb.org/?language=ja',
+          'label': '詳細情報',
+          'uri': 'https://www.themoviedb.org/movie/',
         }
+      },
+      {
+        "type": "text",
+        "text": "data by TMDb",
+        "size": "xs",
+        "align": "end",
       },
       {
         'type': 'spacer',
