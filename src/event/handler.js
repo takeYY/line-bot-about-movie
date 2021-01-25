@@ -17,11 +17,11 @@ exports.handler = function (event) {
 
         const Text = event.message.text;
         var response;
-        if (Text.includes('help') || Text.includes('ヘルプ')) {
+        if (Text.includes('#help') || Text.includes('ヘルプ')) {
 
           // ユーザから「help」か「ヘルプ」が含まれたメッセージを送られた場合
-          response = 'movie　映画\n上記入力で映画情報を表示します。\n\n位置情報を送ることで周辺の映画館をリスト表示します。\n\n#???\n隠しコマンドがあります。';
-        } else if (Text.includes('movie') || Text.includes('映画')) {
+          response = '#movie　映画\n上記入力で映画情報を表示します。\n\n位置情報を送ることで周辺の映画館をリスト表示します。\n\n#???\n隠しコマンドがあります。';
+        } else if (Text.includes('#movie') || Text.includes('映画')) {
 
           // ユーザから「movie」か「映画」が含まれたメッセージを送られた場合
           const templateMovieMessage = layout.movieMessage(URI.movieLIFF);
