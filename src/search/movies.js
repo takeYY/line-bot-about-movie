@@ -77,17 +77,18 @@ exports.search = function (event, obj) {
         } else {
           overview_text = '表示しません。';
         }
-        eachMovieLayout.body.contents[2].contents[0].contents[1].text = overview_text;
+        eachMovieLayout.body.contents[3].contents[0].contents[1].text = overview_text;
         eachMovieLayout.hero.url = 'https://image.tmdb.org/t/p/w200' + movie.poster_path;
         eachMovieLayout.footer.contents[0].action.uri = `https://www.themoviedb.org/movie/${movie.id}?language=ja-JP`;
         for (let i = 0; i < 5; i++) {
           if (i+1 <= movie.vote_average/2) {
-            eachMovieLayout.body.contents[1].contents[i].url = 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png';
+            eachMovieLayout.body.contents[2].contents[i].url = 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png';
           } else {
-            eachMovieLayout.body.contents[1].contents[i].url = 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png';
+            eachMovieLayout.body.contents[2].contents[i].url = 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png';
           }
         }
-        eachMovieLayout.body.contents[1].contents[5].text = `${movie.vote_average/2}（${movie.vote_count}件）`;
+        eachMovieLayout.body.contents[2].contents[5].text = `${movie.vote_average / 2}（${movie.vote_count}件）`;
+        eachMovieLayout.body.contents[1].text = `（${movie.release_date.slice(0, 4)}年）`;
         moviesLayout.push(eachMovieLayout)
       }
     });

@@ -18,6 +18,12 @@ exports.template = {
         'size': 'xl',
       },
       {
+        'type': 'text',
+        'text': '(2001)',
+        'color': '#737373FF',
+        'align': 'start',
+      },
+      {
         'type': 'box',
         'layout': 'baseline',
         'margin': 'md',
