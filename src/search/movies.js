@@ -37,20 +37,15 @@ exports.search = function (event, obj) {
   var total_pages = result.total_pages;
   var movies = [];
   var movies_list = [];
-  if (4 <= total_pages) {
+  if (2 <= total_pages) {
     for (let i = 0; i < 3; i++) {
       var random_page = getRandomInt(total_pages - 1) + 1;
       var random_url = setPageURL(url, random_page);
-      movies_list = movies_list.concat(getMovies(random_url));
+      movies_list = getMovies(random_url);
+      movies = movies.concat(movies_list[getRandomInt(movies_list.length)])
     }
-    movies = get3Movies(movies_list);
-  } else if (2 <= total_pages && total_pages < 4) {
-    for (let i = 0; i < total_pages; i++){
-      var movie_url = setPageURL(url, i);
-      movies_list = movies_list.concat(getMovies(movie_url));
-    }
-    movies = get3Movies(movies_list);
-  } else {
+  }
+  else {
     movies_list = result.results;
     movies = get3Movies(movies_list);
   }
@@ -62,9 +57,6 @@ exports.search = function (event, obj) {
     return client.replyMessage(event.replyToken, movie_echo);
   }
   else {
-    if (4 <= movies.length) {
-      movies = movies.slice(0,3);
-    }
     // メッセージを構築
     var eachMovieLayoutTemplate = layout.movieResult;
     var moviesLayout = []
