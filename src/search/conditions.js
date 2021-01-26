@@ -33,11 +33,17 @@ exports.search = function (event) {
     // ユーザーからBotに映画情報が送られた場合のみ実行
     var releaseDate = searchQuery.release_date;
     // 映画公開日の探索範囲（10年）
-    const diffYear = 9
+    var diffYear = 9
     if (releaseDate === '最近') {
       const now = new Date();
+      diffYear = 5;
       releaseDate = now.getFullYear() - diffYear;
-    } else {
+    } else if (releaseDate === '指定なし') {
+      const now = new Date();
+      releaseDate = '1900';
+      diffYear = now.getFullYear() - Number(releaseDate);
+    }
+    else {
       releaseDate = searchQuery.release_date.slice(0, 4);
     }
     var info = {
