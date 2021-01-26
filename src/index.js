@@ -18,6 +18,7 @@ app.get('/theaters', function (req, res) {
 app.get('/movies', function (req, res) {
   res.render('movie', {
     liff_id: process.env.MOVIE_LIFF,
+    genre: configuration.genres,
   });
 });
 app.get('/', function (req, res) {

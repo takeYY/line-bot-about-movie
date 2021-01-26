@@ -8,3 +8,16 @@
   border: 2px solid #00b900;
   border-radius: 10px;
 }
+
+.label-checkbox{
+  cursor: pointer;
+  padding:5px;
+  border: 1px solid #00b900;
+  border-radius: 5px;
+}
+input{
+  display: none;
+}
+.check-box:checked + .label-checkbox {
+  background-color: #00b900;
+}

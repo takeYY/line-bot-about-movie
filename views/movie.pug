@@ -30,10 +30,17 @@ html(lang='jp')
             .card-body
               label(for='select-release_date', class='outline-line-color') 公開日指定
               select(name='release_date', class='form-control', id='select-release_date')
+                option 指定なし
                 - for (var x = 1900; x <= 2020; x+=10)
                   option #{x}年　〜　#{x+9}年
                 option 最近
-                option 指定なし
+          .form-group
+            .card-body
+              label(for='select-genres', class='outline-line-color') ジャンル
+              .form-check
+                each val, key in genre
+                  input(type='checkbox', name='genres', value=`${key}`, id=`select-genre-${key}`, class='check-box')
+                  label(for=`select-genre-${key}`, class='label-checkbox mr-3') #{val}
           .form-group
             .card-body
               label.outline-line-color 概要の表示<br>(ネタバレが含まれる可能性あり)

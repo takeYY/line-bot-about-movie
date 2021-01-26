@@ -32,6 +32,8 @@ exports.search = function (event) {
   } else if (eventType === 'movie') {
     // ユーザーからBotに映画情報が送られた場合のみ実行
     var releaseDate = searchQuery.release_date;
+    var genres = searchQuery.genres;
+    var genre_query = '';
     // 映画公開日の探索範囲（10年）
     var diffYear = 9
     if (releaseDate === '最近') {
@@ -46,15 +48,19 @@ exports.search = function (event) {
     else {
       releaseDate = searchQuery.release_date.slice(0, 4);
     }
+    // ジャンルの探索
+    if (genres.length) {
+      genre_query = `&with_genres=${genres.join()}`;
+    }
     var info = {
-      lang: 'ja-JP',
-      sortBy: 'vote_average.desc',
-      voteCount: '1000',
-      date_gte: releaseDate + '-01-01',
-      date_lte: (Number(releaseDate) + diffYear) + '-12-31',
+      lang: '&language=ja-JP',
+      sortBy: '&sort_by=vote_average.desc',
+      voteCount: '&vote_count.gte=1000',
+      date_gte: `&primary_release_date.gte=${releaseDate}-01-01`,
+      date_lte: `&primary_release_date.lte=${(Number(releaseDate) + diffYear)}-12-31`,
     };
 
-    var url = `${URI.tmdb}&language=${info.lang}&sort_by=${info.sortBy}&vote_count.gte=${info.voteCount}&primary_release_date.gte=${info.date_gte}&primary_release_date.lte=${info.date_lte}`;
+    var url = `${URI.tmdb}${info.lang}${info.sortBy}${info.voteCount}${info.date_gte}${info.date_lte}${genre_query}`;
     var obj = {
       url: url,
       overview: searchQuery.overview,
