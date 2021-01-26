@@ -48,7 +48,7 @@ exports.search = function (event) {
       date_lte: (Number(releaseDate) + diffYear) + '-12-31',
     };
 
-    var url = `${URI.tmdb}&language=${info.lang}&sort_by=${info.sortBy}&vote_count.gte=${info.voteCount}&release_date.gte=${info.date_gte}&release_date.lte=${info.date_lte}`;
+    var url = `${URI.tmdb}&language=${info.lang}&sort_by=${info.sortBy}&vote_count.gte=${info.voteCount}&primary_release_date.gte=${info.date_gte}&primary_release_date.lte=${info.date_lte}`;
     var obj = {
       url: url,
       overview: searchQuery.overview,
