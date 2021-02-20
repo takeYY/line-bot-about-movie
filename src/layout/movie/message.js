@@ -1,5 +1,5 @@
 exports.template = function (liffUrl) {
-  const movieMessage = {
+  const MOVIE_MESSAGE_TEMPLATE = {
     type: 'template',
     altText: '映画の検索方法を指定',
     template: {
@@ -17,7 +17,7 @@ exports.template = function (liffUrl) {
           type: 'postback',
           data: JSON.stringify(
             {
-              'type': 'movie',
+              type: 'movie',
             }
           ),
           displayText: 'おすすめの映画を検索！',
@@ -25,5 +25,5 @@ exports.template = function (liffUrl) {
       ],
     },
   };
-  return movieMessage;
+  return MOVIE_MESSAGE_TEMPLATE;
 };

@@ -1,11 +1,11 @@
-const configuration = require('../config/router');
-const line = require('@line/bot-sdk');
-const config = configuration.config;
-const client = new line.Client(config);
-const layout = require('../layout/template');
-const search = require('../search/router');
+const CONFIGURATION = require('../config/router');
+const LINE = require('@line/bot-sdk');
+const LINE_CONFIG = CONFIGURATION.config;
+const CLIENT = new LINE.Client(LINE_CONFIG);
+const LAYOUT = require('../layout/template');
+const SEARCH = require('../search/router');
 
-const URI = configuration.URIs;
+const URI = CONFIGURATION.URIs;
 
 // イベントに対する返答を記述する部分
 exports.handler = function (event) {
@@ -15,83 +15,97 @@ exports.handler = function (event) {
     switch (event.message.type) {
       case 'text':// ユーザからテキストが送られた場合
 
-        const Text = event.message.text;
-        var response;
-        if (Text.includes('#help') || Text.includes('ヘルプ')) {
+        const MESSAGE_TEXT = event.message.text;
+        let response;
 
-          // ユーザから「help」か「ヘルプ」が含まれたメッセージを送られた場合
-          response = '#movie　映画\n上記入力で映画情報を表示します。\n\n位置情報を送ることで周辺の映画館をリスト表示します。\n\n#???\n隠しコマンドがあります。';
-        } else if (Text.includes('#movie') || Text.includes('映画')) {
-
-          // ユーザから「movie」か「映画」が含まれたメッセージを送られた場合
-          const templateMovieMessage = layout.movieMessage(URI.movieLIFF);
-          // 返信
-          return client.replyMessage(event.replyToken, templateMovieMessage);
-        } else if (Text === '開発者') {
-
-          // ユーザから「#開発者」が送られた場合
-          const movies = ['ウォーリー', 'インサイド・ヘッド', 'インターステラー', 'マトリックス', '鈴木先生', 'クラウドアトラス', 'ダンサー・イン・ザ・ダーク'];
-          var random_movie = movies[Math.floor(Math.random() * movies.length)];
-          response = `開発者のおすすめの映画は\n『${random_movie}』\nです。`;
-        } else {
-
-          // 上記以外
-          search.condition(event);
+        // ユーザから「help」か「ヘルプ」が含まれたメッセージを送られた場合
+        if (MESSAGE_TEXT.includes('#help') || MESSAGE_TEXT.includes('ヘルプ')) {
+          response = `#movie 映画\n
+                      上記入力で映画情報を表示します。\n\n
+                      位置情報を送ることで周辺の映画館をリスト表示します。\n\n
+                      #???\n
+                      隠しコマンドがあります。`;
         }
-        const text_echo = {
+        // ユーザから「movie」か「映画」が含まれたメッセージを送られた場合
+        else if (MESSAGE_TEXT.includes('#movie') || MESSAGE_TEXT.includes('映画')) {
+          const TEMPLATE_MOVIE_MESSAGE = LAYOUT.movieMessage(URI.movieLIFF);
+          // 返信
+          return CLIENT.replyMessage(event.replyToken, TEMPLATE_MOVIE_MESSAGE);
+        }
+        // ユーザから「#開発者」が送られた場合
+        else if (MESSAGE_TEXT === '開発者') {
+          const MY_FAVORITE_MOVIES = ['ウォーリー', 'インサイド・ヘッド', 'インターステラー', 'マトリックス', '鈴木先生', 'クラウドアトラス', 'ダンサー・イン・ザ・ダーク'];
+          let favoriteMovie = MY_FAVORITE_MOVIES[Math.floor(Math.random() * MY_FAVORITE_MOVIES.length)];
+          response = `開発者のおすすめの映画は\n
+                      『${favoriteMovie}』\n
+                      です。`;
+        }
+        // 上記以外
+        else {
+          SEARCH.condition(event);
+        }
+        const TEXT_ECHO_DICT = {
           type: 'text',
           text: response,
         };
-        return client.replyMessage(event.replyToken, text_echo);
+        return CLIENT.replyMessage(event.replyToken, TEXT_ECHO_DICT);
 
-      case 'image'://ユーザから画像が送られた場合
+      case 'image':// ユーザから画像が送られた場合
 
-        const image_echo = {
+        const IMAGE_ECHO_DICT = {
           type: 'text',
           text: '画像をありがとう！',
         };
-        return client.replyMessage(event.replyToken, image_echo);
+        return CLIENT.replyMessage(event.replyToken, IMAGE_ECHO_DICT);
 
-      case 'location'://ユーザから位置情報が送られた場合
+      case 'location':// ユーザから位置情報が送られた場合
 
-        var liffUrl = `${URI.theaterLIFF}?lat=${event.message.latitude}&lon=${event.message.longitude}`;
-        const templateTheaterMessage = layout.theaterMessage(liffUrl, event.message.latitude, event.message.longitude);
+        let liffUrl = `${URI.theaterLIFF}?lat=${event.message.latitude}&lon=${event.message.longitude}`;
+        const THEATER_MESSAGE_TEMPLATE = LAYOUT.theaterMessage(liffUrl, event.message.latitude, event.message.longitude);
         // 返信
-        return client.replyMessage(event.replyToken, templateTheaterMessage);
+        return CLIENT.replyMessage(event.replyToken, THEATER_MESSAGE_TEMPLATE);
 
-      default://上記以外
+      default:// 上記以外
         return Promise.resolve(null);
     }
-  } else if (event.type === 'postback') {// Botからのメッセージに返答した時
+  }
+  // Botからのメッセージに返答した時
+  else if (event.type === 'postback') {
 
-    var latlon = JSON.parse(event.postback.data);
-    if (latlon.type === 'theater') {
-      //周囲3kmの映画館を検索！
-      var dist = 3;
-      var url = `${URI.yahoo}&lat=${latlon.lat}&lon=${latlon.lon}&dist=${dist}`;
-      var obj = {
-        url: url,
-        dist: dist,
+    let receivedMessage = JSON.parse(event.postback.data);
+
+    // 映画館に関するメッセージが返答された場合
+    if (receivedMessage.type === 'theater') {
+      // デフォルトの検索範囲は3km
+      const DIST = 3;
+      const URL = `${URI.yahoo}&lat=${receivedMessage.lat}&lon=${receivedMessage.lon}&dist=${DIST}`;
+      let dictDataForSearchTheaters = {
+        url: URL,
+        dist: DIST,
       };
-      search.theater(event, obj);
-    } else if (latlon.type === 'movie') {
-      //おすすめの映画を検索！
-      var info = {
+      SEARCH.theater(event, dictDataForSearchTheaters);
+    }
+    // 映画に関するメッセージが返答された場合
+    else if (receivedMessage.type === 'movie') {
+      //映画の検索設定
+      let query = {
         lang: 'ja-JP',
         sortBy: 'vote_average.desc',
-        voteCount: '1000',
+        voteCountGte: '1000',
       };
 
-      var url = `${URI.tmdb}&language=${info.lang}&sort_by=${info.sortBy}&vote_count.gte=${info.voteCount}`;
-      var obj = {
-        url: url,
+      const URL = `${URI.tmdb}&language=${query.lang}&sort_by=${query.sortBy}&vote_count.gte=${query.voteCountGte}`;
+      let dictDataForSearchMovies = {
+        url: URL,
         overview: 'する',
       };
-      search.movie(event, obj);
+      SEARCH.movie(event, dictDataForSearchMovies);
     }
-  } else {
+  }
+  // 上記以外のイベントの場合
+  else {
     try {
-      search.condition(event);
+      SEARCH.condition(event);
     } catch{
       return Promise.resolve(null);
     }

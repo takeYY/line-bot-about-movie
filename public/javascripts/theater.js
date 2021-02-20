@@ -1,18 +1,18 @@
 $(document).ready(function () {
-  var temp = $('#theater_temp').data('temp');
-  initializeLiff(temp)
+  const LIFF_THEATER_ID = $('#liff-theater-id').data('liff');
+  initializeLiff(LIFF_THEATER_ID)
   $('#form').submit(function (event) {
-    var values = {};
+    let values = {};
     values.type = 'theater';
     $.each($('#form').serializeArray(), function (i, field) {
       values[field.name] = field.value;
     });
-    var params = new URLSearchParams(decodeURIComponent(window.location.search));
+    let params = new URLSearchParams(decodeURIComponent(window.location.search));
     values.lat = params.get('lat');
     values.lon = params.get('lon');
     liff.sendMessages([{
-      'type': 'text',
-      'text': JSON.stringify(values)
+      type: 'text',
+      text: JSON.stringify(values)
     }]).then(function () {
       liff.closeWindow()
     }).catch(function (error) {

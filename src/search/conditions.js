@@ -1,58 +1,63 @@
-const configuration = require('../config/router');
-const line = require('@line/bot-sdk');
-const config = configuration.config;
-const client = new line.Client(config);
-const search = require('./router');
+const CONFIGURATION = require('../config/router');
+const LINE = require('@line/bot-sdk');
+const LINE_CONFIG = CONFIGURATION.config;
+const CLIENT = new LINE.Client(LINE_CONFIG);
+const SEARCH = require('./router');
 
-const URI = configuration.URIs;
+const URI = CONFIGURATION.URIs;
 
 exports.search = function (event) {
-  var searchQuery;
+  let receivedSearchMessage;
   try {
-    searchQuery = JSON.parse(event.message.text)
-  } catch (err) {
+    receivedSearchMessage = JSON.parse(event.message.text)
+  }
+  // 検索を要求するメッセージでない場合
+  catch (err) {
     console.log(err)
-    const echo = {
-      'type': 'text',
-      'text': '周辺の映画館を探すなら位置情報を送ってください。\n\n#help\n上記入力でヘルプを表示します。',
+    const ERROR_ECHO = {
+      type: 'text',
+      text: `周辺の映画館を探すなら位置情報を送ってください。\n\n
+             #help\n
+             上記入力でヘルプを表示します。`,
     }
     // 返信
-    return client.replyMessage(event.replyToken, echo);
+    return CLIENT.replyMessage(event.replyToken, ERROR_ECHO);
   }
-  var eventType = searchQuery.type;
+  let eventType = receivedSearchMessage.type;
+  // ユーザーからBotにテキスト位置情報が送られた場合のみ以下が実行される
   if (eventType === 'theater') {
-    // ユーザーからBotにテキスト位置情報が送られた場合のみ以下が実行される
-    var dist = searchQuery.dist.replace('km', '');
-    var url = `${URI.yahoo}&lat=${searchQuery.lat}&lon=${searchQuery.lon}&dist=${dist}`;
-    var obj = {
-      url: url,
-      dist: dist,
+    const DIST = receivedSearchMessage.dist.replace('km', '');
+    const URL = `${URI.yahoo}&lat=${receivedSearchMessage.lat}&lon=${receivedSearchMessage.lon}&dist=${DIST}`;
+    let dataDictForSearchTheaters = {
+      url: URL,
+      dist: DIST,
     }
-    search.theater(event, obj);
-  } else if (eventType === 'movie') {
-    // ユーザーからBotに映画情報が送られた場合のみ実行
-    var releaseDate = searchQuery.release_date;
-    var genres = searchQuery.genres;
-    var genre_query = '';
+    SEARCH.theater(event, dataDictForSearchTheaters);
+  }
+  // ユーザーからBotに映画情報が送られた場合のみ実行
+  else if (eventType === 'movie') {
+    let releaseDate = receivedSearchMessage.release_date;
+    let genres = receivedSearchMessage.genres;
+    let genreQuery = '';
     // 映画公開日の探索範囲（10年）
-    var diffYear = 9
+    let diffYear = 9
+    const NOW = new Date();
+    // 最近ならば直近5年以内
     if (releaseDate === '最近') {
-      const now = new Date();
       diffYear = 5;
-      releaseDate = now.getFullYear() - diffYear;
+      releaseDate = NOW.getFullYear() - diffYear;
     } else if (releaseDate === '指定なし') {
-      const now = new Date();
       releaseDate = '1900';
-      diffYear = now.getFullYear() - Number(releaseDate);
+      diffYear = NOW.getFullYear() - Number(releaseDate);
     }
     else {
-      releaseDate = searchQuery.release_date.slice(0, 4);
+      releaseDate = receivedSearchMessage.release_date.slice(0, 4);
     }
     // ジャンルの探索
     if (genres.length) {
-      genre_query = `&with_genres=${genres.join()}`;
+      genreQuery = `&with_genres=${genres.join()}`;
     }
-    var info = {
+    let query = {
       lang: '&language=ja-JP',
       sortBy: '&sort_by=vote_average.desc',
       voteCount: '&vote_count.gte=1000',
@@ -60,11 +65,11 @@ exports.search = function (event) {
       date_lte: `&primary_release_date.lte=${(Number(releaseDate) + diffYear)}-12-31`,
     };
 
-    var url = `${URI.tmdb}${info.lang}${info.sortBy}${info.voteCount}${info.date_gte}${info.date_lte}${genre_query}`;
-    var obj = {
-      url: url,
-      overview: searchQuery.overview,
+    const URL = `${URI.tmdb}${query.lang}${query.sortBy}${query.voteCount}${query.date_gte}${query.date_lte}${genreQuery}`;
+    let dataDictForSearchMovies = {
+      url: URL,
+      overview: receivedSearchMessage.overview,
     }
-    search.movie(event, obj);
+    SEARCH.movie(event, dataDictForSearchMovies);
   }
 };

@@ -1,5 +1,5 @@
 exports.template = function (liffUrl, latitude, longitude) {
-  const theaterMessage = {
+  const THEATER_MESSAGE_TEMPLATE = {
     type: 'template',
     altText: '検索方法を指定',
     template: {
@@ -16,14 +16,14 @@ exports.template = function (liffUrl, latitude, longitude) {
           label: '周囲3kmの映画館を検索',
           type: 'postback',
           data: JSON.stringify({
-            'type': 'theater',
-            'lat': latitude,
-            'lon': longitude,
+            type: 'theater',
+            lat: latitude,
+            lon: longitude,
           }),
           displayText: '周囲3kmの映画館を検索！',
         }
       ],
     },
   };
-  return theaterMessage;
+  return THEATER_MESSAGE_TEMPLATE;
 };
