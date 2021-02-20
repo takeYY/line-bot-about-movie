@@ -5,8 +5,8 @@ const client = new line.Client(config);
 const layout = require('../layout/template');
 const request = require('sync-request');
 
-function setPageURL(url, page) {
-  return url + '&page=' + page;
+function getPageURL(url, page) {
+  return `${url}&page=${page}`;
 };
 
 function getMovies(url) {
@@ -14,16 +14,16 @@ function getMovies(url) {
 };
 
 function get3Movies(list) {
-  var movies = [];
+  let movies = [];
   for (let i = 0; i < 3; i++) {
-    var random_content = getRandomInt(list.length);
-    movies.push(list[random_content]);
+    let randomContent = getRandomInt(list.length);
+    movies.push(list[randomContent]);
   }
   return movies;
 };
 
 function requestURL(url) {
-  var response = request('GET', url);
+  let response = request('GET', url);
   return JSON.parse(response.getBody('utf8'));
 };
 
@@ -31,41 +31,41 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 };
 
-exports.search = function (event, obj) {
-  var url = obj.url;
-  var result = requestURL(url);
-  var total_pages = result.total_pages;
-  var movies = [];
-  var movies_list = [];
-  if (2 <= total_pages) {
+exports.search = function (event, dictDataForSearchMovies) {
+  const BASE_URL = dictDataForSearchMovies.url;
+  let data = requestURL(BASE_URL);
+  let totalPages = data.total_pages;
+  let movies = [];
+  let moviesList = [];
+  if (2 <= totalPages) {
     for (let i = 0; i < 3; i++) {
-      var random_page = getRandomInt(total_pages - 1) + 1;
-      var random_url = setPageURL(url, random_page);
-      movies_list = getMovies(random_url);
-      movies = movies.concat(movies_list[getRandomInt(movies_list.length)])
+      let randomPage = getRandomInt(totalPages - 1) + 1;
+      let randomUrl = getPageURL(BASE_URL, randomPage);
+      moviesList = getMovies(randomUrl);
+      movies = movies.concat(moviesList[getRandomInt(moviesList.length)])
     }
   }
   else {
-    movies_list = result.results;
-    movies = get3Movies(movies_list);
+    moviesList = data.results;
+    movies = get3Movies(moviesList);
   }
   if (movies === undefined || movies[0] === undefined) {
-    const movie_echo = {
+    const NO_MOVIE_ECHO = {
       type: 'text',
       text: 'お探しの映画はありません。',
     }
-    return client.replyMessage(event.replyToken, movie_echo);
+    return client.replyMessage(event.replyToken, NO_MOVIE_ECHO);
   }
   else {
     // メッセージを構築
-    var eachMovieLayoutTemplate = layout.movieResult;
-    var moviesLayout = []
+    let eachMovieLayoutTemplate = layout.movieResult;
+    let moviesLayout = []
     movies.forEach(function (movie) {
-      var eachMovieLayout = JSON.parse(JSON.stringify(eachMovieLayoutTemplate));
+      let eachMovieLayout = JSON.parse(JSON.stringify(eachMovieLayoutTemplate));
       if (movie.poster_path != undefined) {
         eachMovieLayout.body.contents[0].text = movie.title;
-        var overview_text;
-        if (obj.overview === 'する') {
+        let overview_text;
+        if (dictDataForSearchMovies.overview === 'する') {
           if (!movie.overview) {
             overview_text = '概要はありません。';
           } else {
@@ -92,14 +92,14 @@ exports.search = function (event, obj) {
         moviesLayout.push(eachMovieLayout)
       }
     });
-    var carousel = {
-      'type': 'carousel',
-      'contents': moviesLayout,
+    let carousel = {
+      type: 'carousel',
+      contents: moviesLayout,
     }
     const movie_echo = {
-      'type': 'flex',
-      'altText': `お探しの映画は${movies.length}件あります。`,
-      'contents': carousel,
+      type: 'flex',
+      altText: `お探しの映画は${movies.length}件あります。`,
+      contents: carousel,
     }
     return client.replyMessage(event.replyToken, movie_echo);
   }

@@ -20,11 +20,7 @@ exports.handler = function (event) {
 
         // ユーザから「help」か「ヘルプ」が含まれたメッセージを送られた場合
         if (MESSAGE_TEXT.includes('#help') || MESSAGE_TEXT.includes('ヘルプ')) {
-          response = `#movie 映画\n
-                      上記入力で映画情報を表示します。\n\n
-                      位置情報を送ることで周辺の映画館をリスト表示します。\n\n
-                      #???\n
-                      隠しコマンドがあります。`;
+          response = `#movie 映画\n上記入力で映画情報を表示します。\n\n位置情報を送ることで周辺の映画館をリスト表示します。\n\n#???\n隠しコマンドがあります。`;
         }
         // ユーザから「movie」か「映画」が含まれたメッセージを送られた場合
         else if (MESSAGE_TEXT.includes('#movie') || MESSAGE_TEXT.includes('映画')) {
@@ -36,9 +32,7 @@ exports.handler = function (event) {
         else if (MESSAGE_TEXT === '開発者') {
           const MY_FAVORITE_MOVIES = ['ウォーリー', 'インサイド・ヘッド', 'インターステラー', 'マトリックス', '鈴木先生', 'クラウドアトラス', 'ダンサー・イン・ザ・ダーク'];
           let favoriteMovie = MY_FAVORITE_MOVIES[Math.floor(Math.random() * MY_FAVORITE_MOVIES.length)];
-          response = `開発者のおすすめの映画は\n
-                      『${favoriteMovie}』\n
-                      です。`;
+          response = `開発者のおすすめの映画は\n『${favoriteMovie}』\nです。`;
         }
         // 上記以外
         else {

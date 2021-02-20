@@ -16,9 +16,7 @@ exports.search = function (event) {
     console.log(err)
     const ERROR_ECHO = {
       type: 'text',
-      text: `周辺の映画館を探すなら位置情報を送ってください。\n\n
-             #help\n
-             上記入力でヘルプを表示します。`,
+      text: `周辺の映画館を探すなら位置情報を送ってください。\n\n#help\n上記入力でヘルプを表示します。`,
     }
     // 返信
     return CLIENT.replyMessage(event.replyToken, ERROR_ECHO);
@@ -28,17 +26,17 @@ exports.search = function (event) {
   if (eventType === 'theater') {
     const DIST = receivedSearchMessage.dist.replace('km', '');
     const URL = `${URI.yahoo}&lat=${receivedSearchMessage.lat}&lon=${receivedSearchMessage.lon}&dist=${DIST}`;
-    let dataDictForSearchTheaters = {
+    let dictDataForSearchTheaters = {
       url: URL,
       dist: DIST,
     }
-    SEARCH.theater(event, dataDictForSearchTheaters);
+    SEARCH.theater(event, dictDataForSearchTheaters);
   }
   // ユーザーからBotに映画情報が送られた場合のみ実行
   else if (eventType === 'movie') {
     let releaseDate = receivedSearchMessage.release_date;
     let genres = receivedSearchMessage.genres;
-    let genreQuery = '';
+    let withGenre = '';
     // 映画公開日の探索範囲（10年）
     let diffYear = 9
     const NOW = new Date();
@@ -55,7 +53,7 @@ exports.search = function (event) {
     }
     // ジャンルの探索
     if (genres.length) {
-      genreQuery = `&with_genres=${genres.join()}`;
+      withGenre = genres.join();
     }
     let query = {
       lang: '&language=ja-JP',
@@ -63,13 +61,14 @@ exports.search = function (event) {
       voteCount: '&vote_count.gte=1000',
       date_gte: `&primary_release_date.gte=${releaseDate}-01-01`,
       date_lte: `&primary_release_date.lte=${(Number(releaseDate) + diffYear)}-12-31`,
+      genres: `&with_genres=${withGenre}`,
     };
 
-    const URL = `${URI.tmdb}${query.lang}${query.sortBy}${query.voteCount}${query.date_gte}${query.date_lte}${genreQuery}`;
-    let dataDictForSearchMovies = {
+    const URL = `${URI.tmdb}${query.lang}${query.sortBy}${query.voteCount}${query.date_gte}${query.date_lte}${query.genres}`;
+    let dictDataForSearchMovies = {
       url: URL,
       overview: receivedSearchMessage.overview,
     }
-    SEARCH.movie(event, dataDictForSearchMovies);
+    SEARCH.movie(event, dictDataForSearchMovies);
   }
 };
