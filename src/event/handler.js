@@ -1,9 +1,9 @@
 const CONFIGURATION = require('../config/router');
 const LINE = require('@line/bot-sdk');
 const LINE_CONFIG = CONFIGURATION.config;
-const CLIENT = new LINE.Client(LINE_CONFIG);
-const LAYOUT = require('../layout/template');
-const SEARCH = require('../search/router');
+const client = new LINE.Client(LINE_CONFIG);
+const layout = require('../layout/template');
+const search = require('../search/router');
 
 const URI = CONFIGURATION.URIs;
 
@@ -24,9 +24,9 @@ exports.handler = function (event) {
         }
         // ユーザから「movie」か「映画」が含まれたメッセージを送られた場合
         else if (MESSAGE_TEXT.includes('#movie') || MESSAGE_TEXT.includes('映画')) {
-          const TEMPLATE_MOVIE_MESSAGE = LAYOUT.movieMessage(URI.movieLIFF);
+          const TEMPLATE_MOVIE_MESSAGE = layout.movieMessage(URI.movieLIFF);
           // 返信
-          return CLIENT.replyMessage(event.replyToken, TEMPLATE_MOVIE_MESSAGE);
+          return client.replyMessage(event.replyToken, TEMPLATE_MOVIE_MESSAGE);
         }
         // ユーザから「#開発者」が送られた場合
         else if (MESSAGE_TEXT === '開発者') {
@@ -36,13 +36,13 @@ exports.handler = function (event) {
         }
         // 上記以外
         else {
-          SEARCH.condition(event);
+          search.condition(event);
         }
         const TEXT_ECHO_DICT = {
           type: 'text',
           text: response,
         };
-        return CLIENT.replyMessage(event.replyToken, TEXT_ECHO_DICT);
+        return client.replyMessage(event.replyToken, TEXT_ECHO_DICT);
 
       case 'image':// ユーザから画像が送られた場合
 
@@ -50,14 +50,14 @@ exports.handler = function (event) {
           type: 'text',
           text: '画像をありがとう！',
         };
-        return CLIENT.replyMessage(event.replyToken, IMAGE_ECHO_DICT);
+        return client.replyMessage(event.replyToken, IMAGE_ECHO_DICT);
 
       case 'location':// ユーザから位置情報が送られた場合
 
         let liffUrl = `${URI.theaterLIFF}?lat=${event.message.latitude}&lon=${event.message.longitude}`;
-        const THEATER_MESSAGE_TEMPLATE = LAYOUT.theaterMessage(liffUrl, event.message.latitude, event.message.longitude);
+        const THEATER_MESSAGE_TEMPLATE = layout.theaterMessage(liffUrl, event.message.latitude, event.message.longitude);
         // 返信
-        return CLIENT.replyMessage(event.replyToken, THEATER_MESSAGE_TEMPLATE);
+        return client.replyMessage(event.replyToken, THEATER_MESSAGE_TEMPLATE);
 
       default:// 上記以外
         return Promise.resolve(null);
@@ -73,11 +73,11 @@ exports.handler = function (event) {
       // デフォルトの検索範囲は3km
       const DIST = 3;
       const URL = `${URI.yahoo}&lat=${receivedMessage.lat}&lon=${receivedMessage.lon}&dist=${DIST}`;
-      let dictDataForSearchTheaters = {
+      let searchTheatersObj = {
         url: URL,
         dist: DIST,
       };
-      SEARCH.theater(event, dictDataForSearchTheaters);
+      search.theater(event, searchTheatersObj);
     }
     // 映画に関するメッセージが返答された場合
     else if (receivedMessage.type === 'movie') {
@@ -89,17 +89,17 @@ exports.handler = function (event) {
       };
 
       const URL = `${URI.tmdb}&language=${query.lang}&sort_by=${query.sortBy}&vote_count.gte=${query.voteCountGte}`;
-      let dictDataForSearchMovies = {
+      let searchMoviesObj = {
         url: URL,
         overview: 'する',
       };
-      SEARCH.movie(event, dictDataForSearchMovies);
+      search.movie(event, searchMoviesObj);
     }
   }
   // 上記以外のイベントの場合
   else {
     try {
-      SEARCH.condition(event);
+      search.condition(event);
     } catch{
       return Promise.resolve(null);
     }

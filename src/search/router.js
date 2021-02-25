@@ -1,13 +1,13 @@
-const conditions = require('./conditions');
-const movies = require('./movies');
-const theaters = require('./theaters');
+const CONDITIONS = require('./conditions');
+const MOVIES = require('./movies');
+const THEATERS = require('./theaters');
 
 exports.condition = function (event) {
-  return conditions.search(event);
+  return CONDITIONS.search(event);
 };
-exports.movie = function (event, obj) {
-  return movies.search(event, obj);
+exports.movie = function (event, searchObj) {
+  return MOVIES.search(event, searchObj);
 };
-exports.theater = function (event, obj) {
-  return theaters.search(event, obj);
+exports.theater = function (event, searchObj) {
+  return THEATERS.search(event, searchObj);
 };
